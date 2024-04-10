@@ -26,25 +26,31 @@
      {
          boolean flag = !p_176427_1_.func_175640_z(p_176427_2_);
  
-+        logPowered(p_176427_1_, p_176427_2_, !flag); // RSMM
++        rsmm$logPowered(p_176427_1_, p_176427_2_, !flag); // RSMM
 +
          if (flag != ((Boolean)p_176427_3_.func_177229_b(field_176429_b)).booleanValue())
          {
              p_176427_1_.func_180501_a(p_176427_2_, p_176427_3_.func_177226_a(field_176429_b, Boolean.valueOf(flag)), 4);
-@@ -230,4 +238,16 @@
+@@ -230,4 +238,22 @@
      {
          return p_193383_4_ == EnumFacing.UP ? BlockFaceShape.BOWL : BlockFaceShape.UNDEFINED;
      }
 +
 +    // RSMM
 +    @Override
-+    public boolean logPoweredOnBlockUpdate() {
++    public boolean rsmm$logPoweredOnBlockUpdate() {
 +        return false;
 +    }
 +
 +    // RSMM
 +    @Override
-+    public boolean isActive(World world, BlockPos pos, IBlockState state) {
-+        return state.func_177229_b(field_176429_b);
++    public boolean rsmm$isActive(World world, BlockPos pos, IBlockState state) {
++        TileEntity blockEntity = world.func_175625_s(pos);
++
++        if (blockEntity instanceof TileEntityHopper) {
++            return !((TileEntityHopper)blockEntity).func_145888_j();
++        }
++
++        return false;
 +    }
  }

@@ -5,20 +5,20 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public interface IBlock {
-	
-	default boolean isMeterable() {
+
+	default boolean rsmm$isMeterable() {
 		return false;
 	}
-	
-	default boolean isPowerSource() {
+
+	default boolean rsmm$isPowerSource() {
 		return false;
 	}
-	
-	default boolean logPoweredOnBlockUpdate() {
+
+	default boolean rsmm$logPoweredOnBlockUpdate() {
 		return true;
 	}
-	
-	default boolean isPowered(World world, BlockPos pos, IBlockState state) {
+
+	default boolean rsmm$isPowered(World world, BlockPos pos, IBlockState state) {
 		return world.isBlockPowered(pos);
 	}
 }
