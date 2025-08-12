@@ -12,7 +12,7 @@ cp ~/.gradle/caches/minecraft/net/minecraft/minecraft_server/1.12.2/minecraft_se
 mkdir -p carpetmod
 
 echo "📦 Extracting CARPET1122-CTEC zip to carpetmod directory..."
-unzip -x META-INF/MANIFEST.MF -qo ../../distributions/Carpetmod_dev.zip -d carpetmod
+unzip -qo ../../distributions/Carpetmod_dev.zip -d carpetmod
 
 echo "🔄 Updating base.jar with Carpetmod files..."
 zip -ur base.jar carpetmod/*
