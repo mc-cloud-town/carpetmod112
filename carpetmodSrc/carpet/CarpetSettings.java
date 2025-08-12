@@ -24,10 +24,12 @@ import carpet.helpers.ScoreboardDelta;
 import carpet.patches.BlockWool;
 import carpet.utils.TickingArea;
 import carpet.worldedit.WorldEditBridge;
+import com.google.common.collect.Sets;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.command.NumberInvalidException;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.server.management.PlayerChunkMapEntry;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.NextTickListEntry;
@@ -999,6 +1001,24 @@ public class CarpetSettings
     @Rule(desc = "Removes tnt applying velocity to other entities.", category = CREATIVE)
     public static boolean removeTNTVelocity = false;
 
+    @Rule(desc = "Chunk map no longer throws a possible CME with an async line running - infamous 8001gt crash",
+            category = FIX,
+            validator = "validateFixAsyncChunkMapCrash")
+    public static boolean fixAsyncChunkMapCrash = false;
+    private static boolean validateFixAsyncChunkMapCrash(boolean value) {
+        if (CarpetServer.minecraft_server != null) {
+            for (int dim = 0; dim < 3; dim++) {
+                WorldServer world = CarpetServer.minecraft_server.worlds[dim];
+                if (world != null) {
+                    Set<PlayerChunkMapEntry> oldDirty = world.getPlayerChunkMap().dirtyEntries;
+                    Set<PlayerChunkMapEntry> newDirty = value ? Sets.newConcurrentHashSet() : Sets.newHashSet();
+                    newDirty.addAll(oldDirty);
+                    world.getPlayerChunkMap().setDirtyEntries(newDirty);
+                }
+            }
+        }
+        return true;
+    }
     // ===== API ===== //
 
     /**

@@ -13,6 +13,7 @@ public class CarpetCommands {
         handler.registerCommand(new CommandAutosave());
         handler.registerCommand(new CommandBlockInfo());
         handler.registerCommand(new CommandCarpet());
+        handler.registerCommand(new CommandC());
         handler.registerCommand(new CommandChunk());
         handler.registerCommand(new CommandColon());
         handler.registerCommand(new CommandCounter());
@@ -22,8 +23,6 @@ public class CarpetCommands {
         handler.registerCommand(new CommandEntityInfo());
         handler.registerCommand(new CommandFeel());
         handler.registerCommand(new CommandFillBiome());
-        handler.registerCommand(new CommandGMC());
-        handler.registerCommand(new CommandGMS());
         handler.registerCommand(new CommandGrow());
         handler.registerCommand(new CommandLagSpike());
         handler.registerCommand(new CommandLazyChunkBehavior());

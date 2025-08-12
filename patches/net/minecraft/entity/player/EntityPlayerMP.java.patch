@@ -234,7 +234,7 @@
      }
  
      public void func_70634_a(double p_70634_1_, double p_70634_3_, double p_70634_5_)
-@@ -1216,13 +1270,17 @@
+@@ -1216,11 +1270,13 @@
  
          if (p_71033_1_ == GameType.SPECTATOR)
          {
@@ -245,14 +245,10 @@
          else
          {
 +            if(CarpetSettings.spectatorsDontLoadChunks) ((WorldServer)field_70170_p).func_184164_w().func_72683_a(this);
-+            disableSpectatePlayers = false; // Rule to prevent /c camera mode to spectate other players, disable after exiting spectator mode CARPET-XCOM
              this.func_175399_e(this);
          }
-+        gamemodeCamera = false;
  
-         this.func_71016_p();
-         this.func_175136_bO();
-@@ -1233,6 +1291,11 @@
+@@ -1233,6 +1289,11 @@
          return this.field_71134_c.func_73081_b() == GameType.SPECTATOR;
      }
  
@@ -264,7 +260,7 @@
      public boolean func_184812_l_()
      {
          return this.field_71134_c.func_73081_b() == GameType.CREATIVE;
-@@ -1439,4 +1502,113 @@
+@@ -1439,4 +1500,22 @@
      {
          return this.field_193110_cw;
      }
@@ -285,96 +281,5 @@
 +    }
 +    public void dupeItemScan(boolean s){
 +        scanForDuping = s;
-+    }
-+
-+    // Remove some exploits caused by /c to and /s
-+    private double storeX;
-+    private double storeY;
-+    private double storeZ;
-+    private float storeYaw;
-+    private float storePitch;
-+    private int storedDim;
-+    protected boolean disableSpectatePlayers;
-+    private boolean gamemodeCamera;
-+    private boolean nightvision;
-+    public void setCameraData(EntityPlayerMP player) {
-+        storeX = player.storeX;
-+        storeY = player.storeY;
-+        storeZ = player.storeZ;
-+        storeYaw = player.storeYaw;
-+        storePitch = player.storePitch;
-+        storedDim = player.storedDim;
-+        disableSpectatePlayers = player.disableSpectatePlayers;
-+        gamemodeCamera = player.gamemodeCamera;
-+        nightvision = player.nightvision;
-+    }
-+    public void storeCameraData(boolean hasNightvision) {
-+        storeX = field_70165_t;
-+        storeY = field_70163_u;
-+        storeZ = field_70161_v;
-+        storeYaw = field_70177_z;
-+        storePitch = field_70125_A;
-+        storedDim = field_71093_bK;
-+        disableSpectatePlayers = CarpetSettings.cameraModeDisableSpectatePlayers;
-+        nightvision = hasNightvision;
-+    }
-+    public void setGamemodeCamera(){
-+        gamemodeCamera = true;
-+    }
-+    public boolean getGamemodeCamera(){
-+        return gamemodeCamera;
-+    }
-+    public boolean hadNightvision() {return nightvision;}
-+    public boolean moveToStoredCameraData(){
-+        if(CarpetSettings.cameraModeRestoreLocation){
-+            if(storedDim != field_71093_bK){
-+                WorldServer worldserver1 = func_71121_q();
-+                WorldServer worldserver2 = (WorldServer)field_71133_b.func_71218_a(storedDim);
-+                field_71093_bK = storedDim;
-+                field_71135_a.func_147359_a(new SPacketRespawn(field_71093_bK, worldserver1.func_175659_aa(), worldserver1.func_72912_H().func_76067_t(), this.field_71134_c.func_73081_b()));
-+                this.field_71133_b.func_184103_al().func_187243_f(this);
-+                if(LoggerRegistry.__invisDebug){ // Added debugger for the complex bug turning players invisible. CARPET-XCOM
-+                    LoggerRegistry.getLogger("invisDebug").log(()-> new ITextComponent[]{
-+                            Messenger.s(null, "s2: " + worldserver1.field_72996_f.contains(this) + " " + worldserver2.field_72996_f.contains(this))
-+                    });
-+                }
-+                worldserver1.func_72900_e(this);
-+                field_70128_L = false;
-+                worldserver1.func_72964_e(field_70176_ah, field_70164_aj).func_76608_a(this, field_70162_ai);
-+
-+                if (func_70089_S())
-+                {
-+                    func_70012_b(storeX, storeY, storeZ, storeYaw, storePitch);
-+                    worldserver2.func_72838_d(this);
-+                    worldserver2.func_72866_a(this, false);
-+                }
-+                if(LoggerRegistry.__invisDebug){ // Added debugger for the complex bug turning players invisible. CARPET-XCOM
-+                    LoggerRegistry.getLogger("invisDebug").log(()-> new ITextComponent[]{
-+                            Messenger.s(null, "s3: " + worldserver1.field_72996_f.contains(this) + " " + worldserver2.field_72996_f.contains(this) + " " + func_70089_S() + " " + this.func_110143_aJ())
-+                    });
-+                }
-+                func_70029_a(worldserver2);
-+                this.field_71133_b.func_184103_al().func_72375_a(this, worldserver1);
-+                func_70634_a(storeX, storeY, storeZ);
-+                field_71134_c.func_73080_a(worldserver2);
-+                this.field_71133_b.func_184103_al().func_72354_b(this, worldserver2);
-+                this.field_71133_b.func_184103_al().func_72385_f(this);
-+                if(LoggerRegistry.__invisDebug){ // Added debugger for the complex bug turning players invisible. CARPET-XCOM
-+                    LoggerRegistry.getLogger("invisDebug").log(()-> new ITextComponent[]{
-+                            Messenger.s(null, "s4: " + worldserver1.field_72996_f.contains(this) + " " + worldserver2.field_72996_f.contains(this))
-+                    });
-+                }
-+                return true;
-+            }else {
-+                if(storeX == 0 && storeY == 0 && storeZ == 0) storeY = 256.0f;
-+                double dist = Math.sqrt(new BlockPos(storeX, storeY, storeZ).func_177954_c(field_70165_t, field_70163_u, field_70161_v));
-+                field_71135_a.func_147364_a(storeX, storeY, storeZ, storeYaw, storePitch);
-+                return dist > (this.field_71133_b.func_184103_al().func_72395_o()-2)*16;
-+            }
-+        }
-+        return false;
-+    }
-+    public boolean isDisableSpectatePlayers(){
-+        return disableSpectatePlayers;
 +    }
  }
