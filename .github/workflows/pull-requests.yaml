@@ -29,7 +29,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v5
         with:
-          name: vascm-ctec-build-${{ github.event.inputs.tag }}
+          name: carpet1122-ctec-build-${{ github.event.inputs.tag }}
           path: ./build/proxy/out/
 
       - name: Upload Release Assets
