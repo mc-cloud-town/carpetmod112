@@ -56,6 +56,9 @@ public class HUDController
         if (LoggerRegistry.__autosave)
             log_autosave(server);
 
+        if (LoggerRegistry.__8001gt)
+            log_8001gt(server);
+
         if (LoggerRegistry.__tps)
             log_tps(server);
 
@@ -88,6 +91,21 @@ public class HUDController
         }
         int next = 900 - previous;
         String color = Messenger.heatmap_color(previous,860);
+        ITextComponent[] message = new ITextComponent[]{Messenger.m(null,
+                "g Prev: ", String.format(Locale.US, "%s %d",color, previous),
+                "g  Next: ", String.format(Locale.US,"%s %d", color, next))};
+        LoggerRegistry.getLogger("autosave").log(() -> message, "Prev", previous, "Next", next);
+    }
+
+    private static void log_8001gt(MinecraftServer server){
+        int gametick = server.getTickCounter();
+        int previous = gametick%8000;
+
+        if(gametick != 0 && previous == 0) {
+            previous = 8000;
+        }
+        int next = 8000 - previous;
+        String color = Messenger.heatmap_color(previous,7200);
         ITextComponent[] message = new ITextComponent[]{Messenger.m(null,
                 "g Prev: ", String.format(Locale.US, "%s %d",color, previous),
                 "g  Next: ", String.format(Locale.US,"%s %d", color, next))};
