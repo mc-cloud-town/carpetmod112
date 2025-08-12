@@ -34,6 +34,7 @@ public class CarpetCommands {
         handler.registerCommand(new CommandPing());
         handler.registerCommand(new CommandPlayer());
         handler.registerCommand(new CommandProfile());
+        handler.registerCommand(new CommandRefresh());
         handler.registerCommand(new CommandRemoveEntity());
         handler.registerCommand(new CommandRepopulate());
         handler.registerCommand(new CommandRNG());
