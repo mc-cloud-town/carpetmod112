@@ -1,0 +1,15 @@
+name: CI
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - main
+      - release/*
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yaml
+    with:
+      tag: ${{ github.sha }}-dev
