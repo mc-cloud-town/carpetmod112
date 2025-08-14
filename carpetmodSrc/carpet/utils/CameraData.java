@@ -38,6 +38,7 @@ public class CameraData {
     private final float storeYaw;
     private final float storePitch;
     private final int storedDim;
+    private final float storeFallDistance;
     private final List<EffectData> effects;
 
     public CameraData(EntityPlayerMP player) {
@@ -46,6 +47,7 @@ public class CameraData {
         this.storeYaw = player.rotationYaw;
         this.storePitch = player.rotationPitch;
         this.storedDim = player.dimension;
+        this.storeFallDistance = player.fallDistance;
 
         this.effects = player.getActivePotionEffects()
                 .stream()
@@ -161,6 +163,10 @@ public class CameraData {
 
     public int getStoredDim() {
         return storedDim;
+    }
+
+    public float getStoreFallDistance() {
+        return storeFallDistance;
     }
 
     public void applyEffectsToPlayer(EntityPlayerMP player) {

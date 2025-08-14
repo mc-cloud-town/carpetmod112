@@ -11,13 +11,11 @@ import net.minecraft.server.management.PlayerChunkMap;
 import net.minecraft.server.management.PlayerChunkMapEntry;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkProviderServer;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -45,13 +43,11 @@ public class CommandRefresh extends CommandCarpetBase {
 
         EntityPlayerMP player = (EntityPlayerMP) sender;
         WorldServer world = (WorldServer) player.world;
-        ChunkProviderServer provider = world.getChunkProvider();
-        int refreshed = 0;
-
         if (args.length == 1) {
             throw new WrongUsageException(getUsage(sender));
         }
 
+        int refreshed = 0;
         switch (args[1].toLowerCase()) {
             case "current": {
                 int cx = MathHelper.floor(player.posX) >> 4;
@@ -60,22 +56,16 @@ public class CommandRefresh extends CommandCarpetBase {
                 break;
             }
             case "all": {
-                for (Chunk chunk : provider.loadedChunks.values()) {
-                    refreshed += refreshChunk(world, player, chunk.x, chunk.z);
-                }
+                int range = server.getPlayerList().getViewDistance();
+                refreshed = refreshRangeChunks(world, player, range);
                 break;
             }
             case "inrange": {
-                int range = server.getPlayerList().getViewDistance();
-                int cx = MathHelper.floor(player.posX) >> 4;
-                int cz = MathHelper.floor(player.posZ) >> 4;
-                for (int x = cx - range; x <= cx + range; x++) {
-                    for (int z = cz - range; z <= cz + range; z++) {
-                        if (provider.chunkExists(x, z)) {
-                            refreshed += refreshChunk(world, player, x, z);
-                        }
-                    }
+                if (args.length < 3) {
+                    throw new WrongUsageException("/refresh chunk inrange <range>");
                 }
+                int range = parseInt(args[2], 2, 16);
+                refreshed = refreshRangeChunks(world, player, range);
                 break;
             }
             case "at": {
@@ -92,6 +82,27 @@ public class CommandRefresh extends CommandCarpetBase {
         }
 
         Messenger.m(player, "y Refreshed " + refreshed + " chunk(s)");
+    }
+
+    private int refreshRangeChunks(WorldServer world, EntityPlayerMP player, int range) {
+        PlayerChunkMap pcm = world.getPlayerChunkMap();
+        int refreshed = 0;
+        int cx = MathHelper.floor(player.posX) >> 4;
+        int cz = MathHelper.floor(player.posZ) >> 4;
+
+        for (int x = cx - range; x <= cx + range; x++) {
+            for (int z = cz - range; z <= cz + range; z++) {
+                PlayerChunkMapEntry entry = pcm.getEntry(x, z);
+                if (entry != null && entry.sentToPlayers) {
+                    Chunk chunk = world.getChunkProvider().getLoadedChunk(x, z);
+                    if (chunk != null) {
+                        player.connection.sendPacket(new SPacketChunkData(chunk, 65535));
+                        refreshed++;
+                    }
+                }
+            }
+        }
+        return refreshed;
     }
 
     private int refreshChunk(WorldServer world, EntityPlayerMP player, int cx, int cz) {

@@ -86,6 +86,8 @@ public class CommandC extends CommandCarpetBase {
             if (safeTeleportNearby(player, player.getPosition(), SAFE_RADIUS)) {
                 Messenger.m(player, "g Camera data missing, teleported to safe nearby location");
 
+                // fix fall
+                player.fallDistance = 0.0f;
                 player.setGameType(GameType.SURVIVAL);
                 // player.removePotionEffect(MobEffects.INVISIBILITY);
             } else {
@@ -97,6 +99,7 @@ public class CommandC extends CommandCarpetBase {
         Vec3d storedPos = cameraData.getStoredPos();
         teleportPlayerTo(player, storedPos, cameraData.getStoredDim(), cameraData.getStoreYaw(), cameraData.getStorePitch());
 
+        player.fallDistance = cameraData.getStoreFallDistance();
         player.setGameType(GameType.SURVIVAL);
         // player.removePotionEffect(MobEffects.INVISIBILITY);
 
