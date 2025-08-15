@@ -39,7 +39,6 @@ cd "$BUILD_TMP_DIR" || exit
 
 # Copy the vanilla Minecraft Server JAR
 cp "$MINECRAFT_SERVER_JAR" ./base.jar
-cp ./base.jar ./base2.jar
 
 # ==============================
 # Extract Carpetmod
@@ -79,7 +78,7 @@ cp ../base.jar ./out/base.zip
 # Run VanillaCord patcher
 # ==============================
 echo "🚀 Running VanillaCord patcher..."
-java -jar ../../../../.github/workflows/scripts/VanillaCord.jar carpet1122_ctec_"${VERSION}"_proxy
+java -jar ../../../../.github/workflows/tools/VanillaCord.jar carpet1122_ctec_"${VERSION}"_proxy
 
 # ==============================
 # Copy output
