@@ -21,17 +21,14 @@ public class CommandView extends CommandCarpetBase {
     }
 
     @Override
-    public int getRequiredPermissionLevel() {
-        return 4;
-    }
-
-    @Override
     public String getUsage(ICommandSender sender) {
         return "/view <player>";
     }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        if (!command_enabled("commandView", sender)) return;
+
         if (args.length != 1) {
             throw new WrongUsageException(getUsage(sender));
         }

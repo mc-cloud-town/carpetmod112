@@ -139,6 +139,9 @@ public class CarpetSettings
     @Rule(desc = "Enables /ping for players to get their ping", category = COMMANDS)
     public static boolean commandPing = true;
 
+    @Rule(desc = "Enables /view command", category = COMMANDS)
+    public static boolean commandView = false;
+
     @Rule(desc = "Enables /waypoint for saving coordinates", category = COMMANDS)
     public static boolean commandWaypoint = true;
 
