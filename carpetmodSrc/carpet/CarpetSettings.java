@@ -47,7 +47,7 @@ public class CarpetSettings
     public static boolean locked = false;
 
     // TODO: replace these constants at build time
-    public static final String carpetVersion = "CTEC-v0_1_0";
+    public static final String carpetVersion = "CTEC-v0_1_1";
     public static final String minecraftVersion = "1.12.2";
     public static final String mcpMappings = "39-1.12";
 
@@ -1010,9 +1010,7 @@ public class CarpetSettings
             validator = "validateFixAsyncChunkMapCrash")
     public static boolean fixAsyncChunkMapCrash = false;
     private static boolean validateFixAsyncChunkMapCrash(boolean value) {
-        LogManager.getLogger().info("Test loaded {}, {}", CarpetServer.minecraft_server, CarpetServer.minecraft_server != null ? CarpetServer.minecraft_server.worlds : null);
         if (CarpetServer.minecraft_server != null && CarpetServer.minecraft_server.worlds != null) {
-            LogManager.getLogger().info("Test loaded");
             for (int dim = 0; dim < 3; dim++) {
                 WorldServer world = CarpetServer.minecraft_server.worlds[dim];
                 if (world != null) {
