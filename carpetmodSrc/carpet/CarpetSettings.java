@@ -186,15 +186,11 @@ public class CarpetSettings
     @Rule(desc = "Sets the instant scheduled updates instantly to true. The boolean used in world population that can be exploited turning true making all repeaters, comperators, observers and similar components update instantly.", category = CREATIVE, validator = "validateInstantScheduling")
     public static boolean instantScheduling = false;
     private static boolean validateInstantScheduling(boolean value) {
-        if (value) {
+        if (CarpetServer.minecraft_server != null && CarpetServer.minecraft_server.worlds != null) {
             for (int dim = 0; dim < 3; dim++) {
                 WorldServer world = CarpetServer.minecraft_server.worlds[dim];
-                world.scheduledUpdatesAreImmediate = true;
-            }
-        }else {
-            for (int dim = 0; dim < 3; dim++) {
-                WorldServer world = CarpetServer.minecraft_server.worlds[dim];
-                world.scheduledUpdatesAreImmediate = false;
+
+                world.scheduledUpdatesAreImmediate = value;
             }
         }
         return true;
@@ -506,7 +502,7 @@ public class CarpetSettings
     @Rule(desc = "Saves the block event on server shutdown and loads at server startup.", category = FIX, validator = "validateBlockEventSerializer")
     public static boolean blockEventSerializer;
     private static boolean validateBlockEventSerializer(boolean value) {
-        if (!value){
+        if (!value && CarpetServer.minecraft_server != null && CarpetServer.minecraft_server.worlds != null) {
             for (int dim = 0; dim < 3; dim++) {
                 WorldServer world = CarpetServer.minecraft_server.worlds[dim];
                 world.blockEventSerializer.markDirty();
@@ -602,6 +598,11 @@ public class CarpetSettings
 //            AxisAlignedBB.margin = 0;
 //        return true;
 //    }
+
+    @Rule(desc = "Lazy load carpet config", category = FIX, extra = {
+            "Note that this will cause the carpet config to be loaded twice when the server starts."
+    })
+    public static boolean lazyLoadConfig = true;
 
     @Rule(desc = "Redstone dust algorithm", category = {EXPERIMENTAL, OPTIMIZATIONS}, extra = {
             "Fast redstone dust by Theosib",
@@ -1009,12 +1010,15 @@ public class CarpetSettings
             validator = "validateFixAsyncChunkMapCrash")
     public static boolean fixAsyncChunkMapCrash = false;
     private static boolean validateFixAsyncChunkMapCrash(boolean value) {
-        if (CarpetServer.minecraft_server != null) {
+        LogManager.getLogger().info("Test loaded {}, {}", CarpetServer.minecraft_server, CarpetServer.minecraft_server != null ? CarpetServer.minecraft_server.worlds : null);
+        if (CarpetServer.minecraft_server != null && CarpetServer.minecraft_server.worlds != null) {
+            LogManager.getLogger().info("Test loaded");
             for (int dim = 0; dim < 3; dim++) {
                 WorldServer world = CarpetServer.minecraft_server.worlds[dim];
                 if (world != null) {
                     Set<PlayerChunkMapEntry> oldDirty = world.getPlayerChunkMap().getDirtyEntries();
                     Set<PlayerChunkMapEntry> newDirty = value ? Sets.newConcurrentHashSet() : Sets.newHashSet();
+
                     newDirty.addAll(oldDirty);
                     world.getPlayerChunkMap().setDirtyEntries(newDirty);
                 }

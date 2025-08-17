@@ -106,6 +106,10 @@ public class CarpetServer // static for now - easier to handle all around the co
                 });
             }
         }
+
+        if (CarpetSettings.lazyLoadConfig) {
+            CarpetSettings.applySettingsFromConf(server);
+        }
     }
     public static void onWorldsSaved(MinecraftServer server)
     {

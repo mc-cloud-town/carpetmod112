@@ -245,6 +245,18 @@ if (gradle.useAstyle)
 // ===== RECOMPILING AND REOBFUSCATING =====
 
 // Create recompile clean tasks so that we can properly check that two class files are equal without relying on using the same compiler as Mojang
+tasks.withType(Javadoc) {
+    options.encoding = 'UTF-8'
+    options.charSet = 'UTF-8'
+}
+
+tasks.withType(ProcessResources) {
+    filteringCharset = 'UTF-8'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
 
 // Compile
 task(compileClean, type: TaskSubprojectCall)
