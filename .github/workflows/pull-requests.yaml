@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: carpet1122-ctec-build-${{ github.event.inputs.tag }}
           path: ./build/proxy/out/
