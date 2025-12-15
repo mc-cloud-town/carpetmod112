@@ -38,7 +38,7 @@ jobs:
           ./build.sh
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: carpet1122-ctec-build-${{ inputs.tag }}
           path: build/out/
